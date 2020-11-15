@@ -1,15 +1,25 @@
+import ListItem from 'components/listItem';
+
 class EditableList extends HTMLElement {
   constructor() {
     super();
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'open' });
-    const container: HTMLDivElement = document.createElement('div');
+    const container: HTMLUListElement = document.createElement('ul');
 
-    const content: HTMLParagraphElement = document.createElement('p');
-    const text: Text = document.createTextNode('I am a custom element');
+    // const item: HTMLElement = document.createElement('list-item');
+    // item.setAttribute('title', 'Hello!');
 
-    content.appendChild(text);
-    container.appendChild(content);
+
+
+    for(let i = 0; i < 3; i++) {
+      const item: HTMLElement = document.createElement('list-item');
+      const text: string = `Item: ${i}`;
+
+      item.setAttribute('title', text);
+      container.appendChild(item);
+    }
+
     shadowRoot.appendChild(container);
   }
 }

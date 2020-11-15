@@ -81,3 +81,7 @@ button.action-button {
 button.action-button:first-child {
   margin-right: 0.5rem;
 }
+
+li {
+  border: 1px solid green;
+}
