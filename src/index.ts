@@ -1,5 +1,7 @@
-const welcome = (message: string): void => {
-  console.log(`You said: ${message}`);
-};
+import EditableList from 'components/editableList';
 
-welcome('This is a test');
+((): void => {
+  customElements.define('editable-list', EditableList);
+})();
+
+

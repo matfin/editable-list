@@ -9,8 +9,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      utils: path.resolve(__dirname, './src/utils/'),
-    }
+      components: path.resolve(__dirname, 'src/components/'),
+      models: path.resolve(__dirname, 'src/models/'),
+      utils: path.resolve(__dirname, 'src/utils/'),
+    },
+    extensions: ['.ts'],
   },
   module: {
     rules: [
