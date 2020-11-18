@@ -2,8 +2,8 @@ export interface ListItemAttrs {
   children: Node;
 }
 
-export interface EmailAddress {
-  email: string;
+export interface ListItem {
+  title: string;
   id: string;
-  isValid: boolean;
+  isValid?: boolean;
 }

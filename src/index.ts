@@ -1,8 +1,8 @@
 import EditableList from 'components/editableList';
-import ListItem from 'components/listItem';
+import ListItemComponent from 'components/listItem';
 
 ((): void => {
-  customElements.define('list-item', ListItem);
+  customElements.define('list-item', ListItemComponent);
   customElements.define('editable-list', EditableList);
 })();
 
