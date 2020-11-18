@@ -1,16 +1,18 @@
 import template from './template';
 
-export class ListItem extends HTMLElement {
+export class ListItemComponent extends HTMLElement {
   private deleteButton: HTMLButtonElement | null | undefined;
+  private clickDeleteCallback: ((id: string) => void) | null;
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
+    this.clickDeleteCallback = null;
   }
 
   static get observedAttributes(): string[] {
-    return ['title'];
+    return ['id', 'title', 'onClickDelete'];
   }
 
   setAttribute(name: string, value: string): void {
@@ -19,8 +21,12 @@ export class ListItem extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
-    if (name === 'title' && oldVal !== newVal) {
-      this.title = newVal;
+    if (oldVal !== newVal) {
+      if (name === 'title') {
+        this.title = newVal;
+      } else if (name === 'id') {
+        this.id = newVal;
+      }
     }
   }
 
@@ -49,7 +55,17 @@ export class ListItem extends HTMLElement {
   }
 
   onDeleteButtonClick(): void {
-    console.log('Delete clicked', this.title);
+    if (this.clickDeleteCallback) {
+      this.clickDeleteCallback(this.id);
+    }
+  }
+
+  get id(): string {
+    return this.getAttribute('id') || '';
+  }
+
+  set id(id: string) {
+    this.setAttribute('id', id);
   }
 
   get title(): string {
@@ -59,6 +75,10 @@ export class ListItem extends HTMLElement {
   set title(title: string) {
     this.setAttribute('title', title);
   }
+
+  set onClickDelete(onClickDelete: (id: string) => void) {
+    this.clickDeleteCallback = onClickDelete;
+  }
 }
 
-export default ListItem;
+export default ListItemComponent;
