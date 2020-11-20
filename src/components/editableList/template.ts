@@ -2,18 +2,24 @@ const template = document.createElement('template');
 
 template.innerHTML = `
   <style type="text/css">
-    ul {
-      padding: 0;
-      margin: 0;
+    div {
+      display: block;
+      max-height: 6rem;
+      padding: 0.5rem;
+      border: 1px solid rgb(195, 194, 207);
+      border-radius: 0.25rem;
+      background: #fff;
+      overflow-y: scroll;
     }
-    list-item {
+    item-input {
       display: inline-block;
-      margin-right: 0.5rem;
-      margin-bottom: 0.25rem;
     }
   </style>
-  <ul list>
-  </ul>
+  <div>
+    <items-list>
+      <item-input type="text" slot="input" placeholder="add more people" />
+    </items-list>
+  </div>
 `;
 
 export default template;

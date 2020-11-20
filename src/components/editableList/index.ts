@@ -1,37 +1,26 @@
-import { ListItem } from 'models';
-import ListItemComponent from 'components/listItem';
+import { ShortcutKeys } from 'models';
+import { splitMultipleInputs } from 'utils';
+import ItemInputComponent from 'components/itemInput';
+import ItemsListComponent from 'components/itemsList';
 import template from './template';
 
 class EditableListComponent extends HTMLElement {
-  private listItems: ListItem[] = [];
+  private itemsListElement: ItemsListComponent | null | undefined;
+  private listItemInputElement: ItemInputComponent | null | undefined;
+  private currentInputValue: string;
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
 
-    this.listItems = [
-      { title: 'matfin@gmail.com', id: '123' },
-      { title: 'me@mattfinucane.com', id: '456' },
-      { title: 'matfin@hotmail.com', id: '789' },
-    ];
-  }
+    this.currentInputValue = '';
+    this.itemsListElement = null;
+    this.listItemInputElement = null;
 
-  private appendItemToList(item: ListItem, list: HTMLElement): void {
-    const { id, title } = item;
-    const listItem: ListItemComponent = <ListItemComponent>document.createElement('list-item');
-
-    listItem.setAttribute('title', title);
-    listItem.setAttribute('id', id);
-    listItem.onClickDelete = (id: string): void => this.removeItem(id);
-    list.appendChild(listItem);
-  }
-
-  private removeItemFromList(id: string, list: HTMLElement): void {
-    const itemNode: HTMLElement | null = list.querySelector(`list-item[id="${id}"]`);
-
-    if (itemNode) {
-      itemNode.parentNode?.removeChild(itemNode);
-    }
+    this.addItemToList = this.addItemToList.bind(this);
+    this.clearInputValue = this.clearInputValue.bind(this);
+    this.onInput = this.onInput.bind(this);
+    this.onKeydown = this.onKeydown.bind(this);
   }
 
   connectedCallback(): void {
@@ -39,43 +28,54 @@ class EditableListComponent extends HTMLElement {
     const templateInstance: DocumentFragment = document.importNode(template.content, true);
 
     shadowRoot?.appendChild(templateInstance);
-    this.render();
-  }
 
-  render(): void {
-    const { shadowRoot } = this;
-    const list: HTMLUListElement | null | undefined = shadowRoot?.querySelector('[list]');
+    this.listItemInputElement = shadowRoot?.querySelector('item-input');
+    this.itemsListElement = shadowRoot?.querySelector('items-list');
 
-    if (list) {
-      list.innerHTML = ``;
-      this.listItems.forEach((item: ListItem): void => this.appendItemToList(item, list));
+    if (this.listItemInputElement) {
+      this.listItemInputElement.onInput = this.onInput;
+      this.listItemInputElement.onKeydown = this.onKeydown;
     }
   }
 
-  setItems(items: ListItem[]): void {
-    this.listItems = items;
-    this.render();
-  }
+  onInput(e: Event): void {
+    const { value } = e.currentTarget as HTMLInputElement;
+    const inputs: string[] = splitMultipleInputs(value);
 
-  addItem(item: ListItem): void {
-    const { shadowRoot } = this;
-    const list: HTMLUListElement | null | undefined = shadowRoot?.querySelector('[list]');
-
-    if (list) {
-      this.appendItemToList(item, list);
-      this.listItems.push(item);
-    }
-  };
-
-  removeItem(id: string): void {
-    const { shadowRoot } = this;
-    const list: HTMLUListElement | null | undefined = shadowRoot?.querySelector('[list]');
-
-    if (list) {
-      this.removeItemFromList(id, list);
-      this.listItems = this.listItems.filter((item: ListItem): boolean => id !== item.id);
+    if (inputs.length > 1) {
+      inputs.forEach(this.addItemToList);
+      this.clearInputValue();
+    } else {
+      this.currentInputValue = value;
     }
   }
+
+  onKeydown(e: KeyboardEvent): void {
+    const { key } = e;
+
+    switch(key) {
+      case ShortcutKeys.COMMA:
+      case ShortcutKeys.ENTER: {
+        e.preventDefault();
+        this.addItemToList(this.currentInputValue);
+        this.clearInputValue();
+      }
+    }
+  }
+
+  addItemToList(title: string): void {
+    if(this.itemsListElement) {
+      this.itemsListElement.addItem(title);
+    }
+  }
+
+  clearInputValue(): void {
+    if (this.listItemInputElement) {
+      this.currentInputValue = '';
+      this.listItemInputElement.value = '';
+    }
+  }
+
 }
 
 export default EditableListComponent;

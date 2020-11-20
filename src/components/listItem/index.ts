@@ -35,7 +35,7 @@ export class ListItemComponent extends HTMLElement {
     const templateInstance: DocumentFragment = document.importNode(template.content, true);
 
     shadowRoot?.appendChild(templateInstance);
-    this.deleteButton = this.shadowRoot?.querySelector('[delete]');
+    this.deleteButton = shadowRoot?.querySelector('[delete]');
     this.deleteButton?.addEventListener('click', this.onDeleteButtonClick);
 
     this.render();
