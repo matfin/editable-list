@@ -2,7 +2,6 @@ import template from './template';
 
 export class ListItemComponent extends HTMLElement {
   private deleteButton: HTMLButtonElement | null | undefined;
-  private listElement: HTMLLIElement | null | undefined;
   private clickDeleteCallback: ((id: string) => void) | null;
 
   constructor() {
@@ -10,7 +9,6 @@ export class ListItemComponent extends HTMLElement {
     this.attachShadow({ mode: 'open' });
 
     this.deleteButton = null;
-    this.listElement = null;
 
     this.onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
     this.clickDeleteCallback = null;
@@ -24,8 +22,15 @@ export class ListItemComponent extends HTMLElement {
     const { shadowRoot } = this;
     const titleNode = shadowRoot?.querySelector('[title]');
 
+    /* istanbul ignore next */
     if (titleNode) {
       titleNode.innerHTML = this.title;
+    }
+  }
+
+  private onDeleteButtonClick(): void {
+    if (this.clickDeleteCallback) {
+      this.clickDeleteCallback(this.id);
     }
   }
 
@@ -36,12 +41,19 @@ export class ListItemComponent extends HTMLElement {
 
   attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
     if (oldVal !== newVal) {
-      if (name === 'title') {
-        this.title = newVal;
-      } else if (name === 'id') {
-        this.id = newVal;
-      } else if (name === 'invalid') {
-        this.isInvalid = newVal !== null;
+      switch(name) {
+        case 'title': {
+          this.title = newVal;
+          break;
+        }
+        case 'id': {
+          this.id = newVal;
+          break;
+        }
+        case 'invalid': {
+          this.isInvalid = newVal !== null;
+          break;
+        }
       }
     }
   }
@@ -52,7 +64,6 @@ export class ListItemComponent extends HTMLElement {
 
     shadowRoot?.appendChild(templateInstance);
     this.deleteButton = shadowRoot?.querySelector('[delete]');
-    this.listElement = shadowRoot?.querySelector('li');
     this.deleteButton?.addEventListener('click', this.onDeleteButtonClick);
 
     this.render();
@@ -60,12 +71,6 @@ export class ListItemComponent extends HTMLElement {
 
   disconnectedCallback(): void {
     this.deleteButton?.removeEventListener('click', this.onDeleteButtonClick);
-  }
-
-  onDeleteButtonClick(): void {
-    if (this.clickDeleteCallback) {
-      this.clickDeleteCallback(this.id);
-    }
   }
 
   get id(): string {
