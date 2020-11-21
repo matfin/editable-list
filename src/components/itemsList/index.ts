@@ -14,19 +14,16 @@ class ItemsListComponent extends HTMLElement {
 
     this.listElement = null;
     this.slotElement = null;
-    this.listItems = [
-      { title: 'matfin@gmail.com', id: '123' },
-      { title: 'me@mattfinucane.com', id: '456' },
-      { title: 'matfin@hotmail.com', id: '789' },
-    ];
+    this.listItems = [];
   }
 
   private appendItemToList(item: ListItem): void {
-    const { id, title } = item;
+    const { id, isValid, title } = item;
     const listItem: ListItemComponent = <ListItemComponent>document.createElement('list-item');
 
-    listItem.setAttribute('title', title);
-    listItem.setAttribute('id', id);
+    listItem.id = id;
+    listItem.isInvalid = !isValid;
+    listItem.title = title;
     listItem.onClickDelete = (id: string): void => this.removeItem(id);
 
     if (this.slotElement) {
@@ -46,8 +43,15 @@ class ItemsListComponent extends HTMLElement {
 
   private render(): void {
     if (this.listElement) {
-      this.clearList();
+      this.clearItems();
       this.listItems.forEach((item: ListItem): void => this.appendItemToList(item));
+    }
+  }
+
+  private removeItem(id: string): void {
+    if (this.listElement) {
+      this.removeItemFromList(id);
+      this.listItems = this.listItems.filter((item: ListItem): boolean => id !== item.id);
     }
   }
 
@@ -61,10 +65,11 @@ class ItemsListComponent extends HTMLElement {
     this.render();
   }
 
-  addItem(title: string): void {
+  addItem(title: string, isValid = true): void {
     if (this.listElement) {
       const item: ListItem = {
         id: generateRandomId(),
+        isValid,
         title,
       };
       this.appendItemToList(item);
@@ -72,21 +77,15 @@ class ItemsListComponent extends HTMLElement {
     }
   };
 
-  clearList(): void {
+  clearItems(): void {
     const listItems: NodeListOf<HTMLElement> | never[] = this.listElement?.querySelectorAll('list-item') || [];
 
     listItems.forEach((listItem: HTMLElement) => listItem.parentNode?.removeChild(listItem));
+    this.listItems = [];
   }
 
   getItems(): ListItem[] {
     return this.listItems;
-  }
-
-  removeItem(id: string): void {
-    if (this.listElement) {
-      this.removeItemFromList(id);
-      this.listItems = this.listItems.filter((item: ListItem): boolean => id !== item.id);
-    }
   }
 
   set items(titles: string[]) {

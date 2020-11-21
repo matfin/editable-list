@@ -5,6 +5,7 @@ import ItemsListComponent from 'components/itemsList';
 import template from './template';
 
 class EditableListComponent extends HTMLElement {
+  private validateFn: ((str: string) => boolean) | null;
   private itemsListElement: ItemsListComponent | null | undefined;
   private listItemInputElement: ItemInputComponent | null | undefined;
   private currentInputValue: string;
@@ -16,6 +17,7 @@ class EditableListComponent extends HTMLElement {
     this.currentInputValue = '';
     this.itemsListElement = null;
     this.listItemInputElement = null;
+    this.validateFn = null;
 
     this.addItemToList = this.addItemToList.bind(this);
     this.clearInputValue = this.clearInputValue.bind(this);
@@ -38,7 +40,7 @@ class EditableListComponent extends HTMLElement {
     }
   }
 
-  onInput(e: Event): void {
+  private onInput(e: Event): void {
     const { value } = e.currentTarget as HTMLInputElement;
     const inputs: string[] = splitMultipleInputs(value);
 
@@ -50,7 +52,7 @@ class EditableListComponent extends HTMLElement {
     }
   }
 
-  onKeydown(e: KeyboardEvent): void {
+  private onKeydown(e: KeyboardEvent): void {
     const { key } = e;
 
     switch(key) {
@@ -63,19 +65,24 @@ class EditableListComponent extends HTMLElement {
     }
   }
 
-  addItemToList(title: string): void {
+  private addItemToList(title: string): void {
     if(this.itemsListElement) {
-      this.itemsListElement.addItem(title);
+      const isValid = this.validateFn ? this.validateFn(title) : true;
+
+      this.itemsListElement.addItem(title, isValid);
     }
   }
 
-  clearInputValue(): void {
+  private clearInputValue(): void {
     if (this.listItemInputElement) {
       this.currentInputValue = '';
       this.listItemInputElement.value = '';
     }
   }
 
+  set validationFunction(fn: (str: string) => boolean) {
+    this.validateFn = fn;
+  }
 }
 
 export default EditableListComponent;

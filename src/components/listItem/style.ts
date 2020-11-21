@@ -5,10 +5,14 @@ const button = `
     justify-content: center;
     background: none;
     border: none;
-    width: 1.5rem;
     height: 1.5rem;
     padding: 0;
+    margin: 0 0.5rem;
     cursor: pointer;
+  }
+
+  :host([invalid]) button {
+    margin-right: 0;
   }
 
   button:focus {
@@ -25,6 +29,13 @@ const li = `
     padding-right: 0;
     background: rgba(102, 153, 255, 0.2);
     border-radius: 0.75rem;
+  }
+
+  :host([invalid]) li {
+    padding: 0;
+    background: inherit;
+    border-bottom: 1px dashed red;
+    border-radius: 0;
   }
 `;
 
