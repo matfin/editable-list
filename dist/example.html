@@ -24,5 +24,17 @@
       </div>
     </div>
     <script src="editable-list.js"></script>
+    <script type="text/javascript">
+      window.addEventListener('load', () => {
+        const editableList = document.querySelector('editable-list');
+        const isValidEmail = email => {
+          const re = RegExp(/(.+)@(.+){2,}\.(.+){2,}/);
+
+          return re.test(email ?? '');
+        };
+
+        editableList.validationFunction = isValidEmail;
+      });
+    </script>
   </body>
 </html>
