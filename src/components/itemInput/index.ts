@@ -2,6 +2,7 @@ import template from './template';
 
 class ItemInputComponent extends HTMLElement {
   private inputElement: HTMLInputElement | null | undefined;
+  private onBlurCallback: ((e: Event) => void) | null;
   private onInputCallback: ((e: Event) => void) | null;
   private onKeydownCallback: ((e: KeyboardEvent) => void) | null;
 
@@ -10,15 +11,42 @@ class ItemInputComponent extends HTMLElement {
     this.attachShadow({ mode: 'open' });
 
     this.inputElement = null;
+    this.onBlurCallback = null;
     this.onInputCallback = null;
     this.onKeydownCallback = null;
 
+    this.blurred = this.blurred.bind(this);
     this.input = this.input.bind(this);
     this.key = this.key.bind(this);
   }
 
   static get observedAttributes(): string[] {
-    return ['onChange', 'onKeydown', 'placeholder', 'value'];
+    return ['placeholder', 'value'];
+  }
+
+  private render(): void {
+    if (this.inputElement) {
+      this.inputElement.placeholder = this.placeHolder;
+      this.inputElement.value = this.value;
+    }
+  }
+
+  private blurred(e: Event): void {
+    if(this.onBlurCallback) {
+      this.onBlurCallback(<KeyboardEvent>e);
+    }
+  }
+
+  private input(e: Event): void {
+    if (this.onInputCallback) {
+      this.onInputCallback(<KeyboardEvent>e);
+    }
+  }
+
+  private key(e: Event): void {
+    if (this.onKeydownCallback) {
+      this.onKeydownCallback(<KeyboardEvent>e);
+    }
   }
 
   setAttribute(name: string, value: string): void {
@@ -43,6 +71,7 @@ class ItemInputComponent extends HTMLElement {
     shadowRoot?.appendChild(templateInstance);
     this.inputElement = shadowRoot?.querySelector('input');
     this.inputElement?.addEventListener('input', this.input);
+    this.inputElement?.addEventListener('blur', this.blurred);
     shadowRoot?.addEventListener('keydown', this.key);
 
     this.render();
@@ -53,25 +82,6 @@ class ItemInputComponent extends HTMLElement {
 
     this.inputElement?.removeEventListener('input', this.input);
     shadowRoot?.removeEventListener('keydown', this.key);
-  }
-
-  render(): void {
-    if (this.inputElement) {
-      this.inputElement.placeholder = this.placeHolder;
-      this.inputElement.value = this.value;
-    }
-  }
-
-  input(e: Event): void {
-    if (this.onInputCallback) {
-      this.onInputCallback(<KeyboardEvent>e);
-    }
-  }
-
-  key(e: Event): void {
-    if (this.onKeydownCallback) {
-      this.onKeydownCallback(<KeyboardEvent>e);
-    }
   }
 
   get placeHolder(): string {
@@ -88,6 +98,10 @@ class ItemInputComponent extends HTMLElement {
 
   set value(value: string) {
     this.setAttribute('value', value);
+  }
+
+  set onBlur(onBlur: (e: Event) => void) {
+    this.onBlurCallback = onBlur;
   }
 
   set onInput(onInput: (e: Event) => void) {

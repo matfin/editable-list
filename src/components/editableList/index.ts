@@ -21,6 +21,7 @@ class EditableListComponent extends HTMLElement {
 
     this.addItemToList = this.addItemToList.bind(this);
     this.clearInputValue = this.clearInputValue.bind(this);
+    this.onBlur = this.onBlur.bind(this);
     this.onInput = this.onInput.bind(this);
     this.onKeydown = this.onKeydown.bind(this);
   }
@@ -35,8 +36,18 @@ class EditableListComponent extends HTMLElement {
     this.itemsListElement = shadowRoot?.querySelector('items-list');
 
     if (this.listItemInputElement) {
+      this.listItemInputElement.onBlur = this.onBlur;
       this.listItemInputElement.onInput = this.onInput;
       this.listItemInputElement.onKeydown = this.onKeydown;
+    }
+  }
+
+  private onBlur(e: Event): void {
+    const { value } = e.currentTarget as HTMLInputElement;
+
+    if(value.length > 0) {
+      this.addItemToList(value);
+      this.clearInputValue();
     }
   }
 
@@ -59,8 +70,10 @@ class EditableListComponent extends HTMLElement {
       case ShortcutKeys.COMMA:
       case ShortcutKeys.ENTER: {
         e.preventDefault();
-        this.addItemToList(this.currentInputValue);
-        this.clearInputValue();
+        if (this.currentInputValue.length > 0) {
+          this.addItemToList(this.currentInputValue);
+          this.clearInputValue();
+        }
       }
     }
   }
