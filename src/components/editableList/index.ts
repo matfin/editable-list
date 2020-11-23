@@ -90,7 +90,7 @@ class EditableListComponent extends HTMLElement {
   }
 
   private clearInputValue(): void {
-     /* istanbul ignore next */
+    /* istanbul ignore next */
     if (this.listItemInputElement) {
       this.currentInputValue = '';
       this.listItemInputElement.value = '';
@@ -99,6 +99,15 @@ class EditableListComponent extends HTMLElement {
 
   set validationFunction(fn: (str: string) => boolean) {
     this.validateFn = fn;
+  }
+
+  get items() {
+    /* istanbul ignore next */
+    if (this.itemsListElement) {
+      return this.itemsListElement.getItems()
+    } else {
+      return [];
+    }
   }
 }
 

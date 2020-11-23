@@ -50,6 +50,7 @@ describe('<editable-list>', (): void => {
 
       // then there should be no items
       expect(itemsList.getItems().length).toEqual(0);
+      expect((component as EditableListComponent).items).toEqual([]);
 
       // when there is input
       input.value = 'one';
@@ -58,6 +59,7 @@ describe('<editable-list>', (): void => {
 
       // then there should be items
       expect(itemsList.getItems()).toEqual(firstRun);
+      expect((component as EditableListComponent).items).toEqual(firstRun);
 
       // when comma is entered
       input.value = 'two';
@@ -66,6 +68,7 @@ describe('<editable-list>', (): void => {
 
       // then there should be another item added
       expect(itemsList.getItems()).toEqual(secondRun);
+      expect((component as EditableListComponent).items).toEqual(secondRun);
 
       // when there are multiple values
       input.value = 'three, four';
@@ -73,6 +76,7 @@ describe('<editable-list>', (): void => {
 
       // then there should be more elements added in bulk
       expect(itemsList.getItems()).toEqual(thirdRun);
+      expect((component as EditableListComponent).items).toEqual(thirdRun);
 
       // when comma is entered with no value
       input.value = '';

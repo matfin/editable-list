@@ -7,33 +7,101 @@
     <link rel="stylesheet" type="text/css" href="base.css" />
   </head>
   <body>
-    <div id="container">
-      <div id="editor">
-        <h1>Share <strong>Board name</strong> with others</h1>
-        <div id="emails-input">
-          <editable-list></editable-list>
-        </div>
+    <!-- Valid emails -->
+    <div class="container" id="emails-container">
+      <div class="editor">
+        <h1>Put <strong>valid emails</strong> in here</h1>
+        <editable-list id="emails"></editable-list>
       </div>
-      <div id="actions">
-        <button id="add-email" class="action-button">
-          Add Email
+      <div class="actions">
+        <button class="action-button add-email">
+          Add random email
         </button>
-        <button id="get-count" class="action-button">
+        <button class="action-button get-email-count">
           Get emails count
         </button>
       </div>
     </div>
-    <script src="editable-list.js"></script>
+
+    <!-- Valid urls -->
+    <div class="container" id="urls-container">
+      <div class="editor">
+        <h1>Put <strong>valid web addresses</strong> in here</h1>
+        <editable-list id="urls"></editable-list>
+      </div>
+      <div class="actions">
+        <button class="action-button add-url">
+          Add random url
+        </button>
+        <button class="action-button get-url-count">
+          Get urls count
+        </button>
+      </div>
+    </div>
+
+    <!-- Register and include custom <editable-list> component -->
+    <script type="text/javascript" src="editable-list.js"></script>
+
+    <!-- A store of random email addresses and urls -->
     <script type="text/javascript">
-      window.addEventListener('load', () => {
-        const editableList = document.querySelector('editable-list');
+      window.emails = [
+        'one@test.ie', 'two@test.ie', 'three@test.ie', 'four@test.ie', 'five@test.ie', 'six@test.ie', 'seven@test.ie'
+      ];
+      window.urls = [
+        'https://one.ie', 'https://two.ie', 'https://three.ie', 'https://four.ie', 'https://five.ie', 'https://six.ie', 'https://seven.ie'
+      ];
+    </script>
+
+    <!-- Set it up for use here -->
+    <script type="text/javascript">
+      const randomNumberInRange = function (min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+      };
+      /**
+       * Setting up the emails list container
+       */
+      const setupEmailsList = () => {
+        const editableEmails = document.querySelector('#emails');
+        const addEmailButton = document.querySelector('#emails-container button.add-email');
+        const getEmailCountButton = document.querySelector('#emails-container button.get-email-count');
         const isValidEmail = email => {
           const re = RegExp(/(.+)@(.+){2,}\.(.+){2,}/);
 
           return re.test(email ?? '');
         };
 
-        editableList.validationFunction = isValidEmail;
+        editableEmails.validationFunction = isValidEmail;
+
+        getEmailCountButton.addEventListener('click', () => alert(editableEmails.items.length));
+        addEmailButton.addEventListener('click', () => editableEmails.addItemToList(
+          window.emails[randomNumberInRange(0, window.emails.length)]
+        ));
+      };
+
+      /**
+       * Setting up the urls list container
+       */
+      const setupUrlsList = () => {
+        const editableUrls = document.querySelector('#urls');
+        const addUrlButton = document.querySelector('#urls-container button.add-url');
+        const getUrlCountButton = document.querySelector('#urls-container button.get-url-count');
+        const isValidUrl = url => {
+          const re = RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
+
+          return re.test(url ?? '');
+        };
+
+        editableUrls.validationFunction = isValidUrl;
+
+        getUrlCountButton.addEventListener('click', () => alert(editableUrls.items.length));
+        addUrlButton.addEventListener('click', () => editableUrls.addItemToList(
+          window.urls[randomNumberInRange(0, window.urls.length)]
+        ));
+      };
+
+      window.addEventListener('load', () => {
+        setupEmailsList();
+        setupUrlsList();
       });
     </script>
   </body>
