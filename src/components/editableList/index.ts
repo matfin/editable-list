@@ -35,6 +35,7 @@ class EditableListComponent extends HTMLElement {
     this.listItemInputElement = shadowRoot?.querySelector('item-input');
     this.itemsListElement = shadowRoot?.querySelector('items-list');
 
+    /* istanbul ignore next */
     if (this.listItemInputElement) {
       this.listItemInputElement.onBlur = this.onBlur;
       this.listItemInputElement.onInput = this.onInput;
@@ -70,6 +71,7 @@ class EditableListComponent extends HTMLElement {
       case ShortcutKeys.COMMA:
       case ShortcutKeys.ENTER: {
         e.preventDefault();
+
         if (this.currentInputValue.length > 0) {
           this.addItemToList(this.currentInputValue);
           this.clearInputValue();
@@ -79,6 +81,7 @@ class EditableListComponent extends HTMLElement {
   }
 
   private addItemToList(title: string): void {
+    /* istanbul ignore next */
     if(this.itemsListElement) {
       const isValid = this.validateFn ? this.validateFn(title) : true;
 
@@ -87,6 +90,7 @@ class EditableListComponent extends HTMLElement {
   }
 
   private clearInputValue(): void {
+     /* istanbul ignore next */
     if (this.listItemInputElement) {
       this.currentInputValue = '';
       this.listItemInputElement.value = '';

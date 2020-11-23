@@ -25,6 +25,7 @@ class ItemInputComponent extends HTMLElement {
   }
 
   private render(): void {
+    /* istanbul ignore next */
     if (this.inputElement) {
       this.inputElement.placeholder = this.placeHolder;
       this.inputElement.value = this.value;
@@ -56,10 +57,15 @@ class ItemInputComponent extends HTMLElement {
 
   attributeChangedCallback(name: string, oldVal: string, newVal: string): void {
     if (oldVal !== newVal) {
-      if (name === 'placeholder') {
-        this.placeHolder = newVal;
-      } else if (name === 'value') {
-        this.value = newVal;
+      switch(name) {
+        case 'placeholder': {
+          this.placeHolder = newVal;
+          break;
+        }
+        case 'value': {
+          this.value = newVal;
+          break;
+        }
       }
     }
   }
