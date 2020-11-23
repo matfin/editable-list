@@ -80,20 +80,20 @@ class EditableListComponent extends HTMLElement {
     }
   }
 
-  private addItemToList(title: string): void {
-    /* istanbul ignore next */
-    if(this.itemsListElement) {
-      const isValid = this.validateFn ? this.validateFn(title) : true;
-
-      this.itemsListElement.addItem(title, isValid);
-    }
-  }
-
   private clearInputValue(): void {
     /* istanbul ignore next */
     if (this.listItemInputElement) {
       this.currentInputValue = '';
       this.listItemInputElement.value = '';
+    }
+  }
+
+  addItemToList(title: string): void {
+    /* istanbul ignore next */
+    if(this.itemsListElement) {
+      const isValid = this.validateFn ? this.validateFn(title) : true;
+
+      this.itemsListElement.addItem(title, isValid);
     }
   }
 
