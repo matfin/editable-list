@@ -17,7 +17,7 @@ template.innerHTML = `
   </style>
   <div>
     <items-list>
-      <item-input type="text" slot="input" placeholder="add more people" />
+      <item-input type="text" slot="input" placeholder="Add more items" />
     </items-list>
   </div>
 `;

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable List</title>
+    <link rel="stylesheet" type="text/css" href="dist/base.css" />
+  </head>
+  <body>
+
+    <!-- Emails -->
+    <div class="container" id="emails-container">
+      <div class="editor">
+        <h1>Put <strong>valid emails</strong> in here</h1>
+        <editable-list id="emails"></editable-list>
+      </div>
+      <div class="actions">
+        <button class="action-button add-email">
+          Add random email
+        </button>
+        <button class="action-button get-email-count">
+          Get emails count
+        </button>
+      </div>
+    </div>
+
+    <!-- Urls -->
+    <div class="container" id="urls-container">
+      <div class="editor">
+        <h1>Put <strong>valid web addresses</strong> in here</h1>
+        <editable-list id="urls"></editable-list>
+      </div>
+      <div class="actions">
+        <button class="action-button add-url">
+          Add random url
+        </button>
+        <button class="action-button get-url-count">
+          Get urls count
+        </button>
+      </div>
+    </div>
+
+    <!-- Register and include custom <editable-list> component -->
+    <script type="text/javascript" src="dist/editable-list.js"></script>
+
+    <!-- Set up extra functionality for the <editable-list> component -->
+    <script type="text/javascript" src="dist/example.js"></script>
+  </body>
+</html>

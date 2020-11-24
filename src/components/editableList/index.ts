@@ -26,23 +26,6 @@ class EditableListComponent extends HTMLElement {
     this.onKeydown = this.onKeydown.bind(this);
   }
 
-  connectedCallback(): void {
-    const { shadowRoot } = this;
-    const templateInstance: DocumentFragment = document.importNode(template.content, true);
-
-    shadowRoot?.appendChild(templateInstance);
-
-    this.listItemInputElement = shadowRoot?.querySelector('item-input');
-    this.itemsListElement = shadowRoot?.querySelector('items-list');
-
-    /* istanbul ignore next */
-    if (this.listItemInputElement) {
-      this.listItemInputElement.onBlur = this.onBlur;
-      this.listItemInputElement.onInput = this.onInput;
-      this.listItemInputElement.onKeydown = this.onKeydown;
-    }
-  }
-
   private onBlur(e: Event): void {
     const { value } = e.currentTarget as HTMLInputElement;
 
@@ -85,6 +68,23 @@ class EditableListComponent extends HTMLElement {
     if (this.listItemInputElement) {
       this.currentInputValue = '';
       this.listItemInputElement.value = '';
+    }
+  }
+
+  connectedCallback(): void {
+    const { shadowRoot } = this;
+    const templateInstance: DocumentFragment = document.importNode(template.content, true);
+
+    shadowRoot?.appendChild(templateInstance);
+
+    this.listItemInputElement = shadowRoot?.querySelector('item-input');
+    this.itemsListElement = shadowRoot?.querySelector('items-list');
+
+    /* istanbul ignore next */
+    if (this.listItemInputElement) {
+      this.listItemInputElement.onBlur = this.onBlur;
+      this.listItemInputElement.onInput = this.onInput;
+      this.listItemInputElement.onKeydown = this.onKeydown;
     }
   }
 
