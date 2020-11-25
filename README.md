@@ -10,7 +10,7 @@ Apart from testing, development and build, this project uses no external depende
 #### How this is structured
 This project contains four main Web Components and each of them are designed to work together to solve the challenge, while maintaining good separation of concerns. These components are as follows:
 
-- The `<list-item>` component contains the styling, structure and behaviour for individual list items. This component styles itself if the content is not valid and it has a delete button callback that is executed in its parent container.
+- The `<list-item>` component contains the styling, structure and behaviour for individual list items. This component styles itself if the content is not valid (assuming a validation function is passed in to `<editable-list>` component) and it has a delete button callback that is executed in its parent container.
 - The `<items-list>` component handles the logic for rendering, adding and removing items from the list. It contains a `slot` element so we can add an input inline alongside the list items.
 - The `<item-input>` component is a text field that focuses on adding event listeners. It handles callbacks passed in for when the text field is changed, focused, blurred or when a key press event occurs. This helps with adding an item to the list when the user presses enter, types in a comma or blurs on the input field.
 - Finally, the `<editable-list>` component ties the previous two together and is the main component that is imported into a document the end-user is authoring.
@@ -26,7 +26,7 @@ This project contains four main Web Components and each of them are designed to 
 - Ensure you have the latest version of [Node](https://nodejs.org/en/) installed. The LTS version is recommended.
 - You will also need the latest version of the [Yarn package manager](https://yarnpkg.com/) to build and test this.
 - Once you have the above requirements, execute the following commands:
-  - `yarn dev` will build this into a single file to `dist/editable-list.js` which can then be used inside the example file (`/dist/example.html`). Open this file directly in your browser.
+  - `yarn dev` will build this into a single file to `dist/editable-list.js` which is then used inside the example file (`/index.html`). Take a look at the file `dist/example.js` to see how two `<editable-list>` components are set up with custom validation.
 	- `yarn test` will run all tests and `yarn coverage` will run all tests with coverage checks.
 	- `yarn lint` will run code lint checks using ESLint
 	- `yarn checks` will run test coverage and lint checks
@@ -35,11 +35,11 @@ This project contains four main Web Components and each of them are designed to 
 #### As a developer, how can I use this in my project?
 This library is framework agnostic and does not use any third party utilites or plugins. It can be used in any framework, be it VueJS, React, Angular or just plain HTML.
 
-An extensive example of how to use it can be seen in the file `/dist/example.html`. The steps for using this are as follows:
+An extensive example of how to use it can be seen in the file `/index.html`. The steps for using this are as follows:
 
-**Note:** This project will run in recent versions of all major evergreen browsers. It will not run in Internet Explorer or the older versions of Microsoft Edge that use the EdgeHTML rendering engine.
+**Note:** This project will run in recent versions of all major evergreen browsers. Internet Explorer or the older versions of Microsoft Edge that use the EdgeHTML rendering engine are not supported.
 
-1: You need to include the script for the component in your HTML document as follows in this pared down example:
+1: You need to include the script for the component in your HTML document as follows in this example:
 
 ```
 <!DOCTYPE html>
@@ -79,6 +79,14 @@ An extensive example of how to use it can be seen in the file `/dist/example.htm
 - Blurring on the input field will add the content to the list.
 - Empty content will not be added to the list.
 - Clicking on the delete icon 'x' on a list item will remove it from the list.
+
+#### Roadmap
+There are some improvements to be made to this component such as:
+- allow end-users and develpers to be able to apply their own CSS styles.
+- fire events when items are added to and removed from the list.
+- Improve internal style set up so that CSS is not repeated for each list item.
+- Allow for setting a custom input place holder.
+- Enable support for [ES Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 
 #### Challenges encountered
 - Getting the test set up working was quite tricky. The testing library used is quite useful, but has limited support for custom Web Components. Setting up Jest to use `jest-environment-jsdom-sixteen` made support for these possible.
